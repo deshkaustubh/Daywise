@@ -3,12 +3,15 @@ package tech.kaustubhdeshpande.daywise
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,13 +22,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import tech.kaustubhdeshpande.daywise.ui.components.DayCard
+import tech.kaustubhdeshpande.daywise.ui.components.FileUploadArea
 import tech.kaustubhdeshpande.daywise.ui.components.RoadmapCard
 import tech.kaustubhdeshpande.daywise.ui.components.StatusTabRow
 import tech.kaustubhdeshpande.daywise.ui.components.TopicCard
 import tech.kaustubhdeshpande.daywise.ui.components.TopicFilter
 import tech.kaustubhdeshpande.daywise.ui.components.TopicStatus
+import tech.kaustubhdeshpande.daywise.ui.components.UploadState
 import tech.kaustubhdeshpande.daywise.ui.theme.AppTheme
-
 
 // ============================================
 // MAIN APP
@@ -185,6 +189,80 @@ fun App() {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // File upload section
+            Text(
+                text = "File Upload Preview",
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            var uploadState by remember {
+                mutableStateOf<UploadState>(UploadState.Empty)
+            }
+
+            FileUploadArea(
+                uploadState = uploadState,
+                onUploadClick = {
+                    // Simulate uploading
+                    uploadState = UploadState.Uploading(
+                        fileName = "CS101_Syllabus_2024.pdf",
+                        progress = 0.75f,
+                        uploadedMB = 7.5f,
+                        totalMB = 10f
+                    )
+                },
+                onCancelClick = {
+                    uploadState = UploadState.Empty
+                }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Test buttons to change states
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { uploadState = UploadState.Empty },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Empty", style = MaterialTheme.typography.labelSmall)
+                }
+
+                Button(
+                    onClick = {
+                        uploadState = UploadState.Uploading(
+                            fileName = "IoT_Syllabus. pdf",
+                            progress = 0.45f,
+                            uploadedMB = 4.5f,
+                            totalMB = 10f
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Uploading", style = MaterialTheme.typography.labelSmall)
+                }
+
+                Button(
+                    onClick = {
+                        uploadState = UploadState.Uploaded(
+                            fileName = "Syllabus_Final.pdf",
+                            fileSizeMB = 8.2f
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Uploaded", style = MaterialTheme.typography.labelSmall)
+                }
+            }
         }
     }
 }
