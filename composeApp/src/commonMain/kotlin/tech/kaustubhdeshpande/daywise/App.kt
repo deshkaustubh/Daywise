@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import tech.kaustubhdeshpande.daywise.ui.components.DayCard
+import tech.kaustubhdeshpande.daywise.ui.components.DaySlider
 import tech.kaustubhdeshpande.daywise.ui.components.FileUploadArea
 import tech.kaustubhdeshpande.daywise.ui.components.RoadmapCard
 import tech.kaustubhdeshpande.daywise.ui.components.StatusTabRow
@@ -263,6 +264,33 @@ fun App() {
                     Text("Uploaded", style = MaterialTheme.typography.labelSmall)
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Day slider section
+            Text(
+                text = "Day Slider Preview",
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            var selectedDays by remember { mutableStateOf(30) }
+
+            DaySlider(
+                value = selectedDays,
+                onValueChange = { newValue -> selectedDays = newValue }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Selected:  $selectedDays days",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
         }
     }
 }
