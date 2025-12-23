@@ -4,28 +4,37 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation. layout.Arrangement
+import androidx. compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose. foundation.layout.Row
+import androidx.compose.foundation.layout. Spacer
+import androidx.compose. foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose. foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui. Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+/**
+ * Filter state for topic list display.
+ * Separate from TopicStatus to allow "show all" functionality.
+ */
+enum class TopicFilter {
+    ALL,        // Shows all topics
+    COMPLETED,  // Shows only done topics
+    SKIPPED     // Shows only skipped topics
+}
+
 @Composable
 fun StatusTabRow(
-    selectedStatus: TopicStatus,
-    onStatusSelected: (TopicStatus) -> Unit,
+    selectedFilter: TopicFilter,
+    onFilterSelected: (TopicFilter) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -38,31 +47,28 @@ fun StatusTabRow(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Remaining Tab
+            // Topics Tab (shows ALL topics regardless of status)
             StatusTab(
-                label = "Remaining",
-                isSelected = selectedStatus == TopicStatus.TODO,
-                onClick = { onStatusSelected(TopicStatus.TODO) },
-                indicatorColor = Color(0xFFE53935), // Red
+                label = "Topics",
+                isSelected = selectedFilter == TopicFilter.ALL,
+                onClick = { onFilterSelected(TopicFilter. ALL) },
                 modifier = Modifier.weight(1f)
             )
 
-            // Done Tab
+            // Done Tab (filters to show only completed topics)
             StatusTab(
                 label = "Done",
-                isSelected = selectedStatus == TopicStatus.COMPLETED,
-                onClick = { onStatusSelected(TopicStatus.COMPLETED) },
-                indicatorColor = Color(0xFF1E88E5), // Blue
+                isSelected = selectedFilter == TopicFilter.COMPLETED,
+                onClick = { onFilterSelected(TopicFilter.COMPLETED) },
                 modifier = Modifier.weight(1f)
             )
 
-            // Skipped Tab
+            // Skipped Tab (filters to show only skipped topics)
             StatusTab(
                 label = "Skipped",
-                isSelected = selectedStatus == TopicStatus.SKIPPED,
-                onClick = { onStatusSelected(TopicStatus.SKIPPED) },
-                indicatorColor = Color(0xFF000000), // Black
-                modifier = Modifier.weight(1f)
+                isSelected = selectedFilter == TopicFilter.SKIPPED,
+                onClick = { onFilterSelected(TopicFilter.SKIPPED) },
+                modifier = Modifier. weight(1f)
             )
         }
     }
@@ -73,7 +79,6 @@ private fun StatusTab(
     label: String,
     isSelected: Boolean,
     onClick: () -> Unit,
-    indicatorColor: Color,
     modifier: Modifier = Modifier
 ) {
     val indicatorHeight by animateDpAsState(
@@ -102,12 +107,12 @@ private fun StatusTab(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Animated Underline Indicator
+        // Animated Underline Indicator (same color for all)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(indicatorHeight)
-                .background(indicatorColor)
+                .background(MaterialTheme.colorScheme.primary)
         )
     }
 }

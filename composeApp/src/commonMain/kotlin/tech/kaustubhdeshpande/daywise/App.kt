@@ -1,26 +1,28 @@
 package tech.kaustubhdeshpande.daywise
 
 import androidx.compose.foundation.background
-import androidx.compose. foundation.layout.Arrangement
-import androidx.compose.foundation.layout. Column
-import androidx.compose.foundation.layout. Spacer
-import androidx.compose. foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose. foundation.layout.padding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime. Composable
-import androidx.compose. runtime.getValue
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime. setValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import tech.kaustubhdeshpande.daywise.ui.components.DayCard
-import tech. kaustubhdeshpande. daywise.ui.components.RoadmapCard
-import tech. kaustubhdeshpande. daywise.ui.components.TopicCard
+import tech.kaustubhdeshpande.daywise.ui.components.RoadmapCard
+import tech.kaustubhdeshpande.daywise.ui.components.StatusTabRow
+import tech.kaustubhdeshpande.daywise.ui.components.TopicCard
+import tech.kaustubhdeshpande.daywise.ui.components.TopicFilter
 import tech.kaustubhdeshpande.daywise.ui.components.TopicStatus
 import tech.kaustubhdeshpande.daywise.ui.theme.AppTheme
 
@@ -41,7 +43,7 @@ fun App() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme. background)
+                .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -50,7 +52,7 @@ fun App() {
             Text(
                 text = "Roadmaps",
                 style = MaterialTheme.typography.displayLarge,
-                color = MaterialTheme. colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -131,7 +133,7 @@ fun App() {
             Spacer(modifier = Modifier.height(8.dp))
 
             // Example topic cards with different states
-            var topic1Status by remember { mutableStateOf(TopicStatus. TODO) }
+            var topic1Status by remember { mutableStateOf(TopicStatus.TODO) }
             var topic2Status by remember { mutableStateOf(TopicStatus.COMPLETED) }
             var topic3Status by remember { mutableStateOf(TopicStatus.SKIPPED) }
 
@@ -151,6 +153,37 @@ fun App() {
                 title = "Security in IoT",
                 status = topic3Status,
                 onStatusChange = { newStatus -> topic3Status = newStatus }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Status tabs section
+            Text(
+                text = "Filter Tabs Preview",
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            var selectedFilter by remember { mutableStateOf(TopicFilter.ALL) }
+
+            StatusTabRow(
+                selectedFilter = selectedFilter,
+                onFilterSelected = { newFilter -> selectedFilter = newFilter }
+            )
+
+            Text(
+                text = "Selected:  ${
+                    when (selectedFilter) {
+                        TopicFilter.ALL -> "Topics (All)"
+                        TopicFilter.COMPLETED -> "Done"
+                        TopicFilter.SKIPPED -> "Skipped"
+                    }
+                }",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
     }
