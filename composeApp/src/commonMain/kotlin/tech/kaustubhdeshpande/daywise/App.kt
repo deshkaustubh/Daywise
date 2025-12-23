@@ -25,6 +25,7 @@ import tech.kaustubhdeshpande.daywise.ui.components.DayCard
 import tech.kaustubhdeshpande.daywise.ui.components.DaySlider
 import tech.kaustubhdeshpande.daywise.ui.components.FileUploadArea
 import tech.kaustubhdeshpande.daywise.ui.components.RoadmapCard
+import tech.kaustubhdeshpande.daywise.ui.components.RoadmapNameField
 import tech.kaustubhdeshpande.daywise.ui.components.StatusTabRow
 import tech.kaustubhdeshpande.daywise.ui.components.TopicCard
 import tech.kaustubhdeshpande.daywise.ui.components.TopicFilter
@@ -290,6 +291,49 @@ fun App() {
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Roadmap name field section
+            Text(
+                text = "Roadmap Name Field Preview",
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            var roadmapName by remember { mutableStateOf("") }
+            var showError by remember { mutableStateOf(false) }
+
+            RoadmapNameField(
+                value = roadmapName,
+                onValueChange = { newValue ->
+                    roadmapName = newValue
+                    showError = false  // Clear error when user types
+                },
+                isError = showError && roadmapName.isBlank(),
+                errorMessage = if (showError && roadmapName.isBlank()) {
+                    "Roadmap name is required"
+                } else null
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Test button to trigger validation
+            Button(
+                onClick = { showError = true },
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Text("Test Validation")
+            }
+
+            Text(
+                text = "Character count: ${roadmapName.length}/50",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
             )
         }
     }
