@@ -1,13 +1,13 @@
-package tech.kaustubhdeshpande.daywise.data. agent
+package tech.kaustubhdeshpande.daywise.data.agent
 
 import ai.koog.agents.core.agent.AIAgent
-import ai.koog. prompt.executor.clients.google.GoogleModels
-import ai.koog. prompt.executor.llms.all.simpleGoogleAIExecutor
+import ai.koog.prompt.executor.clients.google.GoogleModels
+import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import kotlinx.serialization.json.Json
-import tech.kaustubhdeshpande.daywise.data.models. Roadmap
-import tech. kaustubhdeshpande. daywise.data.models.DayTopics
+import tech.kaustubhdeshpande.daywise.data.models.DayTopics
+import tech.kaustubhdeshpande.daywise.data.models.Roadmap
 import tech.kaustubhdeshpande.daywise.data.models.Topic
-import tech.kaustubhdeshpande.daywise.data. models.TopicStatus
+import tech.kaustubhdeshpande.daywise.data.models.TopicStatus
 
 /**
  * AI Agent powered by Koog framework for generating learning roadmaps.
@@ -87,7 +87,7 @@ class RoadmapAgent(
             - Suggest official documentation as primary resources
             - Use clear, beginner-friendly language
         """.trimIndent(),
-        llmModel = GoogleModels. Gemini3_Pro_Preview
+        llmModel = GoogleModels.Gemini3_Pro_Preview
     )
 
     /**
@@ -144,8 +144,8 @@ class RoadmapAgent(
      * @return Formatted prompt string for the AI model
      */
     private fun buildUserPrompt(
-        syllabusContent:  String,
-        targetDays:  Int
+        syllabusContent: String,
+        targetDays: Int
     ): String {
         return """
             **Task:** Create a $targetDays-day learning roadmap from the following syllabus. 
@@ -201,8 +201,8 @@ class RoadmapAgent(
      * @return Complete Roadmap object ready for UI and persistence
      */
     private fun buildRoadmap(
-        name:  String,
-        totalDays:  Int,
+        name: String,
+        totalDays: Int,
         parsedDays: List<DayResponse>,
         sourceSyllabusName: String?
     ): Roadmap {
@@ -252,7 +252,7 @@ class RoadmapAgent(
      * @return Unique ID string
      */
     private fun generateId(): String {
-        val id = "${instancePrefix}-${idCounter. toString().padStart(4, '0')}"
+        val id = "${instancePrefix}-${idCounter.toString().padStart(4, '0')}"
         idCounter++
         return id
     }
@@ -270,10 +270,10 @@ private data class RoadmapResponse(
 /**
  * Represents a single day in the AI response.
  */
-@kotlinx.serialization. Serializable
+@kotlinx.serialization.Serializable
 private data class DayResponse(
     val dayNumber: Int,
-    val topics:  List<TopicResponse>
+    val topics: List<TopicResponse>
 )
 
 /**
@@ -282,7 +282,7 @@ private data class DayResponse(
 @kotlinx.serialization.Serializable
 private data class TopicResponse(
     val title: String,
-    val description:  String = "",
+    val description: String = "",
     val estimatedMinutes: Int = 30,
     val resources: List<String> = emptyList()
 )
