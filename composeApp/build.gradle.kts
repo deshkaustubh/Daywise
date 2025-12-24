@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -16,18 +15,18 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_17) // ← CHANGED from JVM_11 to JVM_17 (Koog requires 17+)
         }
     }
-    
+
     js {
         browser()
         binaries.executable()
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
         binaries.executable()
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -45,7 +44,7 @@ kotlin {
             //Icons
             implementation(compose.materialIconsExtended)
             //Koog AI Agent Framework (v0.6.0 - Latest)
-            implementation("org. jetbrains.kotlinx:koog-core:0.6.0")
+            implementation("ai.koog:koog-agents:0.6.0")
 
             //Required dependencies for Koog
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
@@ -71,6 +70,10 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            // Fix for Koog/Netty duplicate META-INF files
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/io.netty.versions.properties"
         }
     }
     buildTypes {
@@ -80,7 +83,7 @@ android {
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17  // CHANGED from VERSION_11 to VERSION_17
-        targetCompatibility = JavaVersion. VERSION_17  // CHANGED from VERSION_11 to VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17  // CHANGED from VERSION_11 to VERSION_17
     }
 }
 

@@ -21,6 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import tech.kaustubhdeshpande.daywise.data.models.Topic
+import tech.kaustubhdeshpande.daywise.data.models.TopicStatus
 import tech.kaustubhdeshpande.daywise.ui.components.DayCard
 import tech.kaustubhdeshpande.daywise.ui.components.DaySlider
 import tech.kaustubhdeshpande.daywise.ui.components.FileUploadArea
@@ -29,7 +31,6 @@ import tech.kaustubhdeshpande.daywise.ui.components.RoadmapNameField
 import tech.kaustubhdeshpande.daywise.ui.components.StatusTabRow
 import tech.kaustubhdeshpande.daywise.ui.components.TopicCard
 import tech.kaustubhdeshpande.daywise.ui.components.TopicFilter
-import tech.kaustubhdeshpande.daywise.ui.components.TopicStatus
 import tech.kaustubhdeshpande.daywise.ui.components.UploadState
 import tech.kaustubhdeshpande.daywise.ui.theme.AppTheme
 
@@ -335,6 +336,19 @@ fun App() {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
             )
+
+            // Checking gemini 3
+            val testTopic = Topic(
+                id = "1",
+                title = "Kotlin Basics",
+                description = "Learn fundamental Kotlin syntax",
+                dayNumber = 1,
+                estimatedMinutes = 45,
+                status = TopicStatus.TODO,
+                resources = listOf("https://kotlinlang.org/docs/")
+            )
+
+            Text("Test Topic: ${testTopic.title}")  // Should show "Kotlin Basics"
         }
     }
 }
