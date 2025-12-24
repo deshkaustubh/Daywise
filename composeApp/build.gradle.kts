@@ -7,12 +7,13 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    kotlin("plugin.serialization") version "2.1.0"  // ← ADDED THIS for Koog
 }
 
 kotlin {
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17) // ← CHANGED from JVM_11 to JVM_17 (Koog requires 17+)
         }
     }
     
@@ -43,6 +44,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             //Icons
             implementation(compose.materialIconsExtended)
+            //Koog AI Agent Framework (v0.6.0 - Latest)
+            implementation("org. jetbrains.kotlinx:koog-core:0.6.0")
+
+            //Required dependencies for Koog
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -72,8 +79,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17  // CHANGED from VERSION_11 to VERSION_17
+        targetCompatibility = JavaVersion. VERSION_17  // CHANGED from VERSION_11 to VERSION_17
     }
 }
 
