@@ -1,63 +1,87 @@
 package tech.kaustubhdeshpande.daywise.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
-/**
- * Reusable card component for displaying roadmap items in the list.
- * Used in the home screen to show saved roadmaps.
- *
- * Features:
- * - Clean card design with rounded corners
- * - Chevron icon indicating it's clickable
- * - Ripple effect on click
- * - Adapts to light/dark theme
- *
- * @param title The roadmap name (e.g., "IoT Syllabus")
- * @param onClick Callback when card is tapped
- * @param modifier Optional modifier for customization
- */
 @Composable
 fun RoadmapCard(
     title: String,
+    totalDays: Int,
+    completedDays: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Roadmap title
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f)
-        )
+    val progress = completedDays.toFloat() / totalDays
+    val isCompleted = completedDays == totalDays
 
-        // Chevron indicator (using Unicode character)
-        Text(
-            text = "›",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onSurface
+    Card(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
         )
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = if (isCompleted)
+                            "$totalDays Days • Completed"
+                        else
+                            "$totalDays Days • ${(progress * 100).toInt()}% Complete",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Icon(
+                    imageVector = if (isCompleted)
+                        Icons.Outlined.CheckCircle
+                    else
+                        Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = if (isCompleted)
+                        MaterialTheme.colorScheme.primary.copy(0.6f)
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(0.6f)
+                )
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            LinearProgressIndicator(
+                progress = { progress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+            )
+        }
     }
 }
