@@ -1,228 +1,187 @@
 package tech.kaustubhdeshpande.daywise.data.repository
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import tech.kaustubhdeshpande.daywise.data.agent.RoadmapAgent
+import tech.kaustubhdeshpande.daywise.data.models.Day
 import tech.kaustubhdeshpande.daywise.data.models.Roadmap
+import tech.kaustubhdeshpande.daywise.data.models.Topic
 import tech.kaustubhdeshpande.daywise.data.models.TopicStatus
 
-/**
- * Repository for managing roadmap data and coordinating between UI and AI agent.
- * Handles roadmap generation, storage, updates, and provides reactive state management.
- *
- * This repository demonstrates:
- * - Clean architecture pattern (separation of concerns)
- * - Reactive state management with Kotlin Flow
- * - Error handling for AI operations
- * - In-memory storage (can be extended to persistent storage)
- * - 100% shared business logic across all platforms
- *
- * @property apiKey Google AI API key for Gemini model access
- */
-class RoadmapRepository(
-    private val apiKey: String
-) {
-    /**
-     * AI agent for generating roadmaps from syllabus content.
-     */
-    private val agent = RoadmapAgent(apiKey)
+class RoadmapRepository {
 
-    /**
-     * In-memory storage for created roadmaps.
-     * Maps roadmap ID to Roadmap object.
-     */
-    private val roadmapsStorage = mutableMapOf<String, Roadmap>()
+    // Hardcoded roadmap metadata
+    fun getRoadmap(): Roadmap {
+        return Roadmap(
+            id = "kotlin-101",
+            title = "5-Day Kotlin Learning Plan",
+            totalDays = 5,
+            completedDays = 0
+        )
+    }
 
-    /**
-     * Mutable state flow for roadmap generation status.
-     * Exposed as immutable StateFlow to UI layer.
-     */
-    private val _generationState = MutableStateFlow<RoadmapGenerationState>(
-        RoadmapGenerationState.Idle
-    )
+    // Hardcoded days
+    fun getDays(): List<Day> {
+        return listOf(
+            Day(
+                dayNumber = 1,
+                totalTopics = 3,
+                remainingCount = 3,
+                completedCount = 0,
+                skippedCount = 0
+            ),
+            Day(
+                dayNumber = 2,
+                totalTopics = 3,
+                remainingCount = 3,
+                completedCount = 0,
+                skippedCount = 0
+            ),
+            Day(
+                dayNumber = 3,
+                totalTopics = 3,
+                remainingCount = 3,
+                completedCount = 0,
+                skippedCount = 0
+            ),
+            Day(
+                dayNumber = 4,
+                totalTopics = 3,
+                remainingCount = 3,
+                completedCount = 0,
+                skippedCount = 0
+            ),
+            Day(
+                dayNumber = 5,
+                totalTopics = 3,
+                remainingCount = 3,
+                completedCount = 0,
+                skippedCount = 0
+            )
+        )
+    }
 
-    /**
-     * Observable state for roadmap generation.
-     * UI can collect this flow to react to generation progress.
-     */
-    val generationState: StateFlow<RoadmapGenerationState> = _generationState.asStateFlow()
-
-    /**
-     * Mutable state flow for list of all roadmaps.
-     * Exposed as immutable StateFlow to UI layer.
-     */
-    private val _roadmaps = MutableStateFlow<List<Roadmap>>(emptyList())
-
-    /**
-     * Observable list of all roadmaps.
-     * UI can collect this flow to display roadmap list.
-     */
-    val roadmaps: StateFlow<List<Roadmap>> = _roadmaps.asStateFlow()
-
-    /**
-     * Generates a new roadmap from syllabus content using AI agent.
-     * Updates generation state throughout the process.
-     *
-     * @param syllabusContent Raw text content of the syllabus
-     * @param roadmapName User-provided name for the roadmap
-     * @param targetDays Number of days to distribute content across
-     * @param sourceSyllabusName Optional filename of uploaded syllabus
-     * @return Result containing generated Roadmap or error
-     */
-    suspend fun generateRoadmap(
-        syllabusContent: String,
-        roadmapName: String,
-        targetDays: Int,
-        sourceSyllabusName: String? = null
-    ): Result<Roadmap> {
-        return try {
-            // Update state to generating
-            _generationState.value = RoadmapGenerationState.Generating
-
-            // Call AI agent to generate roadmap
-            val generatedRoadmap = agent.generateRoadmap(
-                syllabusContent = syllabusContent,
-                roadmapName = roadmapName,
-                targetDays = targetDays,
-                sourceSyllabusName = sourceSyllabusName
+    // Hardcoded topics per day
+    fun getTopicsForDay(dayId: Int): List<Topic> {
+        return when (dayId) {
+            1 -> listOf(
+                Topic(
+                    id = 1,
+                    dayId = 1,
+                    title = "Setup Kotlin environment",
+                    description = "Install IDE and configure Kotlin compiler",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 2,
+                    dayId = 1,
+                    title = "val vs var basics",
+                    description = "Understand immutability vs mutability",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 3,
+                    dayId = 1,
+                    title = "Data types & type inference",
+                    description = "Learn Int, String, Boolean, and type inference",
+                    isCompleted = TopicStatus.TODO
+                )
             )
 
-            // Save to storage (agent already set createdAt = 0L, which is fine for now)
-            roadmapsStorage[generatedRoadmap.id] = generatedRoadmap
-            updateRoadmapsList()
+            2 -> listOf(
+                Topic(
+                    id = 4,
+                    dayId = 2,
+                    title = "Conditionals",
+                    description = "Practice if/else and when expressions",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 5,
+                    dayId = 2,
+                    title = "Loops",
+                    description = "Use for, while, and ranges",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 6,
+                    dayId = 2,
+                    title = "Collections basics",
+                    description = "Intro to List, Set, Map",
+                    isCompleted = TopicStatus.TODO
+                )
+            )
 
-            // Update state to success
-            _generationState.value = RoadmapGenerationState.Success(generatedRoadmap)
+            3 -> listOf(
+                Topic(
+                    id = 7,
+                    dayId = 3,
+                    title = "Functions",
+                    description = "Define functions and pass parameters",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 8,
+                    dayId = 3,
+                    title = "Classes & objects",
+                    description = "Learn class structure and object creation",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 9,
+                    dayId = 3,
+                    title = "Constructors & properties",
+                    description = "Primary vs secondary constructors",
+                    isCompleted = TopicStatus.TODO
+                )
+            )
 
-            Result.success(generatedRoadmap)
+            4 -> listOf(
+                Topic(
+                    id = 10,
+                    dayId = 4,
+                    title = "Inheritance & interfaces",
+                    description = "Extend classes and implement interfaces",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 11,
+                    dayId = 4,
+                    title = "Data classes & enums",
+                    description = "Use data classes and enum types",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 12,
+                    dayId = 4,
+                    title = "Null safety",
+                    description = "Nullable types, safe calls, and smart casts",
+                    isCompleted = TopicStatus.TODO
+                )
+            )
 
-        } catch (e: Exception) {
-            // Update state to error
-            val errorMessage = e.message ?: "Unknown error occurred during roadmap generation"
-            _generationState.value = RoadmapGenerationState.Error(errorMessage)
+            5 -> listOf(
+                Topic(
+                    id = 13,
+                    dayId = 5,
+                    title = "Collections deep dive",
+                    description = "Work with List, Set, Map operations",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 14,
+                    dayId = 5,
+                    title = "Higher-order functions",
+                    description = "Learn lambdas, map, filter, reduce",
+                    isCompleted = TopicStatus.TODO
+                ),
+                Topic(
+                    id = 15,
+                    dayId = 5,
+                    title = "Extension functions",
+                    description = "Add new functionality to existing classes",
+                    isCompleted = TopicStatus.TODO
+                )
+            )
 
-            Result.failure(e)
+            else -> emptyList()
         }
     }
-
-    /**
-     * Retrieves a roadmap by its ID.
-     *
-     * @param roadmapId Unique identifier of the roadmap
-     * @return Roadmap if found, null otherwise
-     */
-    fun getRoadmapById(roadmapId: String): Roadmap? {
-        return roadmapsStorage[roadmapId]
-    }
-
-    /**
-     * Retrieves all roadmaps sorted by creation date (newest first).
-     * Note: Since createdAt is 0L for all, order may not be meaningful yet.
-     * Can be enhanced later with proper timestamp management.
-     *
-     * @return List of all roadmaps
-     */
-    fun getAllRoadmaps(): List<Roadmap> {
-        return roadmapsStorage.values
-            .sortedByDescending { it.createdAt }
-            .toList()
-    }
-
-    /**
-     * Updates a topic's status (TODO, COMPLETED, or SKIPPED).
-     * Replaces the entire roadmap with updated version.
-     *
-     * @param roadmapId ID of the roadmap containing the topic
-     * @param topicId ID of the topic to update
-     * @param newStatus New status for the topic
-     * @return Updated Roadmap if successful, null if roadmap or topic not found
-     */
-    fun updateTopicStatus(
-        roadmapId: String,
-        topicId: String,
-        newStatus: TopicStatus
-    ): Roadmap? {
-        val roadmap = roadmapsStorage[roadmapId] ?: return null
-
-        // Find and update the topic
-        val updatedDays = roadmap.days.map { dayTopics ->
-            val updatedTopics = dayTopics.topics.map { topic ->
-                if (topic.id == topicId) {
-                    topic.copy(status = newStatus)
-                } else {
-                    topic
-                }
-            }
-            dayTopics.copy(topics = updatedTopics)
-        }
-
-        val updatedRoadmap = roadmap.copy(days = updatedDays)
-
-        // Save updated roadmap
-        roadmapsStorage[roadmapId] = updatedRoadmap
-        updateRoadmapsList()
-
-        return updatedRoadmap
-    }
-
-    /**
-     * Deletes a roadmap by its ID.
-     *
-     * @param roadmapId ID of the roadmap to delete
-     * @return true if deleted successfully, false if roadmap not found
-     */
-    fun deleteRoadmap(roadmapId: String): Boolean {
-        val removed = roadmapsStorage.remove(roadmapId) != null
-        if (removed) {
-            updateRoadmapsList()
-        }
-        return removed
-    }
-
-    /**
-     * Resets the generation state to Idle.
-     * Useful for clearing error messages or success states.
-     */
-    fun resetGenerationState() {
-        _generationState.value = RoadmapGenerationState.Idle
-    }
-
-    /**
-     * Updates the roadmaps list state flow.
-     * Called after any modification to storage.
-     */
-    private fun updateRoadmapsList() {
-        _roadmaps.value = getAllRoadmaps()
-    }
-}
-
-/**
- * Sealed class representing the state of roadmap generation process.
- * Used for reactive UI updates during AI generation.
- */
-sealed class RoadmapGenerationState {
-    /**
-     * Initial state, no generation in progress.
-     */
-    data object Idle : RoadmapGenerationState()
-
-    /**
-     * Generation is currently in progress.
-     */
-    data object Generating : RoadmapGenerationState()
-
-    /**
-     * Generation completed successfully.
-     *
-     * @property roadmap The generated roadmap
-     */
-    data class Success(val roadmap: Roadmap) : RoadmapGenerationState()
-
-    /**
-     * Generation failed with an error.
-     *
-     * @property message Error message describing the failure
-     */
-    data class Error(val message: String) : RoadmapGenerationState()
 }
